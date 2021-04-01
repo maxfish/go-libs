@@ -1,25 +1,15 @@
 package geom
 
-type AlignmentH uint32
+type Alignment uint32
 
 const (
-	AlignmentHCenter AlignmentH = iota
+	AlignmentHCenter Alignment = 1 << iota
 	AlignmentHLeft
 	AlignmentHRight
-)
-
-type AlignmentV uint32
-
-const (
-	AlignmentVCenter AlignmentV = iota
+	AlignmentVCenter
 	AlignmentVTop
 	AlignmentVBottom
 )
-
-type Alignment struct {
-	Horizontal AlignmentH
-	Vertical   AlignmentV
-}
 
 type FitMode int
 

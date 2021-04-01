@@ -3,25 +3,31 @@ package geom
 import (
 	"fmt"
 	"github.com/maxfish/go-libs/pkg/math"
-	"image"
+	si "image"
 )
 
 type Rect struct {
 	X, Y, W, H int
 }
 
+var EmptyRect = Rect{X: 0, Y: 0, W: 0, H: 0}
+
 func RectFromArray(values [4]int) Rect {
-	return Rect{values[0], values[1], values[2], values[3]}
+	return Rect{X: values[0], Y: values[1], W: values[2], H: values[3]}
 }
 
-func RectFromRectangle(r image.Rectangle) Rect {
-	return Rect{r.Min.X, r.Min.Y, r.Dx(), r.Dy()}
+func RectFromFloats(x, y, w, h float32) Rect {
+	return Rect{X: int(x), Y: int(y), W: int(w), H: int(h)}
 }
 
-func (r Rect) ToRectangle() image.Rectangle {
-	return image.Rectangle{
-		Min: image.Point{r.X, r.Y},
-		Max: image.Point{r.X + r.W, r.Y + r.H},
+func RectFromRectangle(r si.Rectangle) Rect {
+	return Rect{X: r.Min.X, Y: r.Min.Y, W: r.Dx(), H: r.Dy()}
+}
+
+func (r Rect) ToRectangle() si.Rectangle {
+	return si.Rectangle{
+		Min: si.Point{X: r.X, Y: r.Y},
+		Max: si.Point{X: r.X + r.W, Y: r.Y + r.H},
 	}
 }
 
@@ -31,6 +37,18 @@ func (r Rect) Right() int   { return r.X + r.W }
 func (r Rect) Bottom() int  { return r.Y + r.H }
 func (r Rect) CenterX() int { return r.X + r.W/2 }
 func (r Rect) CenterY() int { return r.Y + r.H/2 }
+
+func (r Rect) MinPoint() Point {
+	return Point{r.X, r.Y}
+}
+
+func (r Rect) MaxPoint() Point {
+	return Point{r.Right(), r.Bottom()}
+}
+
+func (r Rect) Size() Size {
+	return Size{r.W, r.H}
+}
 
 func (r Rect) Empty() bool {
 	return r.X == 0 && r.Y == 0 && r.W == 0 && r.H == 0
@@ -56,19 +74,28 @@ func (r Rect) ResizeTo(w, h int) Rect {
 
 func (r Rect) ShrinkByInsets(i Insets) Rect {
 	return Rect{
-		r.X + i.Left,
-		r.Y + i.Top,
-		r.W - i.Right - i.Left,
-		r.H - i.Bottom - i.Top,
+		X: r.X + i.Left,
+		Y: r.Y + i.Top,
+		W: r.W - i.Right - i.Left,
+		H: r.H - i.Bottom - i.Top,
 	}
 }
 
 func (r Rect) ShrinkByInt(i int) Rect {
 	return Rect{
-		r.X + i,
-		r.Y + i,
-		r.W - i*2,
-		r.H - i*2,
+		X: r.X + i,
+		Y: r.Y + i,
+		W: r.W - i*2,
+		H: r.H - i*2,
+	}
+}
+
+func (r Rect) Scale(factor float32) Rect {
+	return Rect{
+		X: r.X,
+		Y: r.Y,
+		W: int(float32(r.W) * factor),
+		H: int(float32(r.H) * factor),
 	}
 }
 
@@ -76,31 +103,30 @@ func (r Rect) CenterIn(o Rect) Rect {
 	hW := (o.W - r.W) / 2
 	hH := (o.H - r.H) / 2
 	return Rect{
-		r.X + hW,
-		r.Y + hH,
-		r.W + hW*2,
-		r.H + hH*2,
+		X: r.X + hW,
+		Y: r.Y + hH,
+		W: r.W + hW*2,
+		H: r.H + hH*2,
 	}
 }
 
 func (r Rect) AlignIn(b Rect, alignment Alignment) Rect {
-	switch alignment.Horizontal {
-	case AlignmentHLeft:
-		r.X = b.X
-	case AlignmentHCenter:
-		r.X = b.X + (b.W-r.W)/2
-	case AlignmentHRight:
-		r.X = b.Right() - r.W
+	newRect := r
+	if alignment&AlignmentHLeft != 0 {
+		newRect.X = b.X
+	} else if alignment&AlignmentHCenter != 0 {
+		newRect.X = b.X + (b.W-r.W)/2
+	} else if alignment&AlignmentHRight != 0 {
+		newRect.X = b.Right() - r.W
 	}
-	switch alignment.Vertical {
-	case AlignmentVTop:
-		r.Y = b.Y
-	case AlignmentVCenter:
-		r.Y = b.Y + (b.H-r.H)/2
-	case AlignmentVBottom:
-		r.Y = b.Bottom() - r.H
+	if alignment&AlignmentVTop != 0 {
+		newRect.Y = b.Y
+	} else if alignment&AlignmentVCenter != 0 {
+		newRect.Y = b.Y + (b.H-r.H)/2
+	} else if alignment&AlignmentVBottom != 0 {
+		newRect.Y = b.Bottom() - r.H
 	}
-	return r
+	return newRect
 }
 
 func (r Rect) FitIn(b Rect, mode FitMode, alignment Alignment) Rect {
