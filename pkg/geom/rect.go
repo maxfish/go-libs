@@ -2,7 +2,7 @@ package geom
 
 import (
 	"fmt"
-	"go-libs/math"
+	"github.com/maxfish/go-libs/pkg/math"
 	"image"
 )
 
