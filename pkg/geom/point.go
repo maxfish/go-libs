@@ -1,12 +1,17 @@
 package geom
 
-import "fmt"
+import (
+	"fmt"
+	gomath "math"
+)
+
+var NullPoint = Point{X: -gomath.MaxInt32, Y: -gomath.MaxInt32}
 
 type Point struct {
 	X, Y int
 }
 
-func PointFromFloats(x,y float32) Point {
+func PointFromFloats(x, y float32) Point {
 	return Point{X: int(x), Y: int(y)}
 }
 
