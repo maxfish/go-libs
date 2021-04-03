@@ -66,6 +66,12 @@ func (r Rect) Translate(x, y int) Rect {
 	return r
 }
 
+func (r Rect) TranslateFloat(x, y float32) Rect {
+	r.X += int(x)
+	r.Y += int(y)
+	return r
+}
+
 func (r Rect) ResizeTo(w, h int) Rect {
 	r.W = w
 	r.H = h
