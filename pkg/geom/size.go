@@ -16,6 +16,13 @@ func MaxSize(a,b Size) Size {
 	}
 }
 
+func MinSize(a,b Size) Size {
+	return Size{
+		W: math.MinI(a.W, b.W),
+		H: math.MinI(a.H, b.H),
+	}
+}
+
 func (s Size) Sub(t Size) Size {
 	return Size{
 		W: s.W - t.W,
