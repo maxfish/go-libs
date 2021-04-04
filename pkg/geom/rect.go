@@ -98,10 +98,10 @@ func (r Rect) ShrinkByInt(i int) Rect {
 
 func (r Rect) Scale(factor float32) Rect {
 	return Rect{
-		X: r.X,
-		Y: r.Y,
-		W: int(float32(r.W) * factor),
-		H: int(float32(r.H) * factor),
+		X: int(math.Round(float32(r.X) * factor)),
+		Y: int(math.Round(float32(r.Y) * factor)),
+		W: int(math.Round(float32(r.W) * factor)),
+		H: int(math.Round(float32(r.H) * factor)),
 	}
 }
 
