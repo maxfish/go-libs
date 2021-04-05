@@ -9,6 +9,10 @@ type Size struct {
 	W, H int
 }
 
+func SizeFromFloats(w, h float32) Size {
+	return Size{int(w), int(h)}
+}
+
 func MaxSize(a,b Size) Size {
 	return Size{
 		W: math.MaxI(a.W, b.W),
