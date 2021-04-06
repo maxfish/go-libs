@@ -9,6 +9,9 @@ const (
 	AlignmentVCenter
 	AlignmentVTop
 	AlignmentVBottom
+
+	AlignmentNone Alignment = 0
+	AlignmentCenter = AlignmentHCenter | AlignmentVCenter
 )
 
 type FitMode int

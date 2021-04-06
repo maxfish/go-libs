@@ -38,6 +38,10 @@ func (r Rect) Bottom() int  { return r.Y + r.H }
 func (r Rect) CenterX() int { return r.X + r.W/2 }
 func (r Rect) CenterY() int { return r.Y + r.H/2 }
 
+func (r Rect) Center() Point {
+	return Point{r.X + r.W/2, r.Y + r.H/2}
+}
+
 func (r Rect) MinPoint() Point {
 	return Point{r.X, r.Y}
 }
@@ -63,6 +67,12 @@ func (r Rect) MoveTo(x, y int) Rect {
 func (r Rect) Translate(x, y int) Rect {
 	r.X += x
 	r.Y += y
+	return r
+}
+
+func (r Rect) TranslatePoint(point Point) Rect {
+	r.X += point.X
+	r.Y += point.Y
 	return r
 }
 

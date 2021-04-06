@@ -19,6 +19,10 @@ func (p Point) Add(other Point) Point {
 	return Point{p.X + other.X, p.Y + other.Y}
 }
 
+func (p Point) Scale(scale float32) Point {
+	return Point{int(float32(p.X) * scale), int(float32(p.Y) * scale)}
+}
+
 func (p Point) EqualsTo(other Point) bool {
 	return p.X == other.X && p.Y == other.Y
 }
