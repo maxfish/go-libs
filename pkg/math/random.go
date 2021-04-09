@@ -29,3 +29,6 @@ func (g *RandomGenerator) Event(chance int) bool {
 	return g.generator.Uint64()%100 < uint64(chance)
 }
 
+func (g *RandomGenerator) Maybe() bool {
+	return g.generator.Float32() < 0.5
+}
