@@ -2,10 +2,10 @@ package geom
 
 import (
 	"fmt"
-	gomath "math"
+	math "math"
 )
 
-var NullPoint = Point{X: -gomath.MaxInt32, Y: -gomath.MaxInt32}
+var NullPoint = Point{X: -math.MaxInt32, Y: -math.MaxInt32}
 
 type Point struct {
 	X, Y int

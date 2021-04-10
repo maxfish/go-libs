@@ -1,4 +1,4 @@
-package image
+package imagex
 
 import (
 	"bytes"
@@ -29,6 +29,74 @@ func NewRGBAImageFromArea(img image.Image, area geom.Rect) *image.RGBA {
 	newImage := image.NewRGBA(destRectangle)
 	draw.Draw(newImage, destRectangle, img, sourceRectangle.Min, draw.Src)
 	return newImage
+}
+
+func Rotate90CCW(img image.Image) *image.RGBA {
+	dstW := img.Bounds().Dy()
+	dstH := img.Bounds().Dx()
+	dst := image.NewRGBA(image.Rect(0, 0, dstW, dstH))
+	for y := 0; y < dstH; y++ {
+		for x := 0; x < dstW; x++ {
+			dst.Set(x, y, img.At(y, x))
+		}
+	}
+	return dst
+}
+
+func CropTransparentPixels(sourceImage image.Image) (destImage *image.RGBA, insets geom.Insets) {
+	insets = MeasureTransparentInsets(sourceImage)
+	rect := geom.RectFromRectangle(sourceImage.Bounds()).ShrinkByInsets(insets)
+	destImage = NewRGBAImageFromArea(sourceImage, rect)
+	return
+}
+
+// MeasureTransparentInsets returns how many rows an columns of fully transparent pixels there are around the image
+func MeasureTransparentInsets(img image.Image) (insets geom.Insets) {
+TopLoop:
+	for y := 0; y < img.Bounds().Dy(); y++ {
+		insets.Top = y
+		for x := 0; x < img.Bounds().Dx(); x++ {
+			_, _, _, a := img.At(x, y).RGBA()
+			if a != 0 {
+				break TopLoop
+			}
+		}
+	}
+
+BottomLoop:
+	for y := 0; y < img.Bounds().Dy(); y++ {
+		insets.Bottom = y
+		for x := 0; x < img.Bounds().Dx(); x++ {
+			_, _, _, a := img.At(x, (img.Bounds().Dy() - 1) -y).RGBA()
+			if a != 0 {
+				break BottomLoop
+			}
+		}
+	}
+
+LeftLoop:
+	for x := 0; x < img.Bounds().Dx(); x++ {
+		insets.Left = x
+		for y := 0; y < img.Bounds().Dy(); y++ {
+			_, _, _, a := img.At(x, y).RGBA()
+			if a != 0 {
+				break LeftLoop
+			}
+		}
+
+	}
+
+RightLoop:
+	for x := 0; x < img.Bounds().Dx(); x++ {
+		insets.Right = x
+		for y := 0; y < img.Bounds().Dy(); y++ {
+			_, _, _, a := img.At((img.Bounds().Dx() - 1) - x, y).RGBA()
+			if a != 0 {
+				break RightLoop
+			}
+		}
+	}
+	return
 }
 
 // Check if an area is full of transparent pixels

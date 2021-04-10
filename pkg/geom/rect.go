@@ -2,8 +2,9 @@ package geom
 
 import (
 	"fmt"
-	"github.com/maxfish/go-libs/pkg/math"
-	si "image"
+	"github.com/maxfish/go-libs/pkg/fmath"
+	"github.com/maxfish/go-libs/pkg/imath"
+	"image"
 )
 
 type Rect struct {
@@ -20,14 +21,14 @@ func RectFromFloats(x, y, w, h float32) Rect {
 	return Rect{X: int(x), Y: int(y), W: int(w), H: int(h)}
 }
 
-func RectFromRectangle(r si.Rectangle) Rect {
+func RectFromRectangle(r image.Rectangle) Rect {
 	return Rect{X: r.Min.X, Y: r.Min.Y, W: r.Dx(), H: r.Dy()}
 }
 
-func (r Rect) ToRectangle() si.Rectangle {
-	return si.Rectangle{
-		Min: si.Point{X: r.X, Y: r.Y},
-		Max: si.Point{X: r.X + r.W, Y: r.Y + r.H},
+func (r Rect) ToRectangle() image.Rectangle {
+	return image.Rectangle{
+		Min: image.Point{X: r.X, Y: r.Y},
+		Max: image.Point{X: r.X + r.W, Y: r.Y + r.H},
 	}
 }
 
@@ -108,10 +109,10 @@ func (r Rect) ShrinkByInt(i int) Rect {
 
 func (r Rect) Scale(factor float32) Rect {
 	return Rect{
-		X: int(math.Round(float32(r.X) * factor)),
-		Y: int(math.Round(float32(r.Y) * factor)),
-		W: int(math.Round(float32(r.W) * factor)),
-		H: int(math.Round(float32(r.H) * factor)),
+		X: int(fmath.Round(float32(r.X) * factor)),
+		Y: int(fmath.Round(float32(r.Y) * factor)),
+		W: int(fmath.Round(float32(r.W) * factor)),
+		H: int(fmath.Round(float32(r.H) * factor)),
 	}
 }
 
@@ -176,10 +177,10 @@ func (r Rect) FitIn(b Rect, mode FitMode, alignment Alignment) Rect {
 }
 
 func (r Rect) UnionWith(other Rect) Rect {
-	x1 := math.MinI(r.X, other.X)
-	y1 := math.MinI(r.Y, other.Y)
-	x2 := math.MaxI(r.Right(), other.Right())
-	y2 := math.MaxI(r.Bottom(), other.Bottom())
+	x1 := imath.Min(r.X, other.X)
+	y1 := imath.Min(r.Y, other.Y)
+	x2 := imath.Max(r.Right(), other.Right())
+	y2 := imath.Max(r.Bottom(), other.Bottom())
 	return Rect{X: x1, Y: y1, W: x2 - x1, H: y2 - y1}
 }
 
@@ -187,6 +188,10 @@ func (r Rect) ContainsPoint(pointX, pointY int) bool {
 	pointX -= r.X
 	pointY -= r.Y
 	return pointX >= 0 && pointY >= 0 && pointX < r.W && pointY < r.H
+}
+
+func (r Rect) IsContainedIn(b Rect) bool {
+	return r.X >= b.X && r.Y >= b.Y && r.Right() <= b.Right() && r.Bottom() <= b.Bottom()
 }
 
 func (r Rect) Intersect(r2 Rect) bool {
@@ -202,14 +207,14 @@ func (r Rect) Intersect(r2 Rect) bool {
 
 // https://yal.cc/rectangle-circle-intersection-test/
 func (r Rect) IntersectWithCircle(circleX, circleY, circleRadius int) bool {
-	dX := circleX - math.MaxI(r.X, math.MinI(circleX, r.X+r.W))
-	dY := circleY - math.MaxI(r.Y, math.MinI(circleY, r.Y+r.H))
+	dX := circleX - imath.Max(r.X, imath.Min(circleX, r.X+r.W))
+	dY := circleY - imath.Max(r.Y, imath.Min(circleY, r.Y+r.H))
 	return (dX*dX + dY*dY) < (circleRadius * circleRadius)
 }
 
 func (r Rect) Intersection(s Rect) Rect {
-	x2 := math.MinI(r.Right(), s.Right())
-	y2 := math.MinI(r.Bottom(), s.Bottom())
+	x2 := imath.Min(r.Right(), s.Right())
+	y2 := imath.Min(r.Bottom(), s.Bottom())
 
 	if r.X < s.X {
 		r.X = s.X

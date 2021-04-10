@@ -2,7 +2,7 @@ package geom
 
 import (
 	"fmt"
-	"github.com/maxfish/go-libs/pkg/math"
+	"github.com/maxfish/go-libs/pkg/imath"
 )
 
 type Size struct {
@@ -15,15 +15,15 @@ func SizeFromFloats(w, h float32) Size {
 
 func MaxSize(a,b Size) Size {
 	return Size{
-		W: math.MaxI(a.W, b.W),
-		H: math.MaxI(a.H, b.H),
+		W: imath.Max(a.W, b.W),
+		H: imath.Max(a.H, b.H),
 	}
 }
 
 func MinSize(a,b Size) Size {
 	return Size{
-		W: math.MinI(a.W, b.W),
-		H: math.MinI(a.H, b.H),
+		W: imath.Min(a.W, b.W),
+		H: imath.Min(a.H, b.H),
 	}
 }
 

@@ -1,13 +1,13 @@
-package math
+package fmath
 
 import (
-	gomath "math"
+	"math"
 )
 
 const (
 	Float32Size      = 4 // bytes
-	RadiansToDegrees = float32(180.0 / gomath.Pi)
-	DegreesToRadians = float32(gomath.Pi / 180.0)
+	RadiansToDegrees = float32(180.0 / math.Pi)
+	DegreesToRadians = float32(math.Pi / 180.0)
 )
 
 func Abs(value float32) float32 {
@@ -30,22 +30,6 @@ func Sign(value float32) float32 {
 	return 1
 }
 
-func MinI(a, b int) int {
-	if a <= b {
-		return a
-	} else {
-		return b
-	}
-}
-
-func MaxI(a, b int) int {
-	if a >= b {
-		return a
-	} else {
-		return b
-	}
-}
-
 func Min(x, y float32) float32 {
 	if x < y {
 		return x
@@ -58,16 +42,6 @@ func Max(x, y float32) float32 {
 		return x
 	}
 	return y
-}
-
-func ClampI(value, a, b int) int {
-	if value < a {
-		return a
-	} else if value > b {
-		return b
-	}
-
-	return value
 }
 
 func Clamp(value, a, b float32) float32 {
@@ -91,7 +65,6 @@ func Lerp(a, b, factor float32) float32 {
 	return (1-factor)*a + factor*b
 }
 
-// This helps only when dealing with float32 numbers, but it's slow
 func Round(value float32) float32 {
-	return float32(gomath.Round(float64(value)))
+	return float32(math.Round(float64(value)))
 }
