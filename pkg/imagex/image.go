@@ -43,11 +43,26 @@ func Rotate90CCW(img image.Image) *image.RGBA {
 	return dst
 }
 
-func CropTransparentPixels(sourceImage image.Image) (destImage *image.RGBA, insets geom.Insets) {
-	insets = MeasureTransparentInsets(sourceImage)
+func Rotate90CW(img image.Image) *image.RGBA {
+	dstW := img.Bounds().Dy()
+	dstH := img.Bounds().Dx()
+	dst := image.NewRGBA(image.Rect(0, 0, dstW, dstH))
+	for y := 0; y < dstH; y++ {
+		for x := 0; x < dstW; x++ {
+			dst.Set(x, y, img.At(y, img.Bounds().Dy()-x-1))
+		}
+	}
+	return dst
+}
+
+func CropTransparentBorders(sourceImage image.Image) (*image.RGBA, geom.Insets) {
+	if IsImageEmpty(sourceImage) {
+		return nil, geom.Insets{}
+	}
+	insets := MeasureTransparentInsets(sourceImage)
 	rect := geom.RectFromRectangle(sourceImage.Bounds()).ShrinkByInsets(insets)
-	destImage = NewRGBAImageFromArea(sourceImage, rect)
-	return
+	destImage := NewRGBAImageFromArea(sourceImage, rect)
+	return destImage, insets
 }
 
 // MeasureTransparentInsets returns how many rows an columns of fully transparent pixels there are around the image
