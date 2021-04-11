@@ -8,9 +8,9 @@ import (
 )
 
 type RectNode struct {
-	Rect      // Width and Height include padding
-	Index     int  // This index is used to keep track of which of the input rects this is
-	Rotated   bool // True if the rect has been rotated 90 degrees
+	Rect         // Width and Height include padding
+	Index   int  // This index is used to keep track of which of the input rects this is
+	Rotated bool // True if the rect has been rotated 90 degrees
 }
 
 func NewRectNode(index, width, height int) RectNode {
@@ -28,10 +28,11 @@ func NewRectNodeFrom(b RectNode) RectNode {
 }
 
 type MaxRectsBinResult struct {
-	PlacedRects    []RectNode // Rects that have been placed
-	NotPlacedRects []RectNode // Rects that didn't fit in the provided area
-	Width          int        // Total Width used by the rects
-	Height         int        // Total Height used by the rects
+	PlacedRects    []RectNode              // Rects that have been placed
+	NotPlacedRects []RectNode              // Rects that didn't fit in the provided area
+	Width          int                     // Total Width used by the rects
+	Height         int                     // Total Height used by the rects
+	Method         FreeRectChoiceHeuristic // Method used to pack the rects
 }
 
 type FreeRectChoiceHeuristic int
@@ -131,10 +132,10 @@ func (mr *MaxRectsBinPacker) placeRect(node RectNode) {
 }
 
 func (mr *MaxRectsBinPacker) scoreRect(rect RectNode, method FreeRectChoiceHeuristic, score1, score2 *int) RectNode {
-	width := rect.W
-	height := rect.H
-	rotatedWidth := height - mr.paddingY + mr.paddingX
-	rotatedHeight := width - mr.paddingX + mr.paddingY
+	width := rect.W + mr.paddingX
+	height := rect.H + mr.paddingY
+	rotatedWidth := rect.H + mr.paddingX
+	rotatedHeight := rect.W + mr.paddingY
 	*score1 = math.MaxInt32
 	*score2 = math.MaxInt32
 
@@ -345,13 +346,13 @@ func (mr *MaxRectsBinPacker) pruneFreeList() {
 			rect1 := mr.freeRectangles[i]
 			rect2 := mr.freeRectangles[j]
 			if rect1.IsContainedIn(rect2.Rect) {
-				mr.freeRectangles = append(mr.freeRectangles[:i], mr.freeRectangles[i+1:]...) // remove index 'i'
+				mr.freeRectangles = append(mr.freeRectangles[:i], mr.freeRectangles[i+1:]...)
 				i--
 				n--
 				break
 			}
 			if rect2.IsContainedIn(rect1.Rect) {
-				mr.freeRectangles = append(mr.freeRectangles[:j], mr.freeRectangles[j+1:]...) // remove index 'j'
+				mr.freeRectangles = append(mr.freeRectangles[:j], mr.freeRectangles[j+1:]...)
 				j--
 				n--
 			}
