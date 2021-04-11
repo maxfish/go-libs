@@ -37,7 +37,7 @@ func Rotate90CCW(img image.Image) *image.RGBA {
 	dst := image.NewRGBA(image.Rect(0, 0, dstW, dstH))
 	for y := 0; y < dstH; y++ {
 		for x := 0; x < dstW; x++ {
-			dst.Set(x, y, img.At(y, x))
+			dst.Set(x, y, img.At(img.Bounds().Dx()-y-1, x))
 		}
 	}
 	return dst
