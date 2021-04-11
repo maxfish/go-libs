@@ -1,4 +1,4 @@
-package fmath
+package rand
 
 /**
  * Code ported to Go from: https://github.com/SRombauts/SimplexNoise
