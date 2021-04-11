@@ -67,7 +67,7 @@ BottomLoop:
 	for y := 0; y < img.Bounds().Dy(); y++ {
 		insets.Bottom = y
 		for x := 0; x < img.Bounds().Dx(); x++ {
-			_, _, _, a := img.At(x, (img.Bounds().Dy() - 1) -y).RGBA()
+			_, _, _, a := img.At(x, (img.Bounds().Dy()-1)-y).RGBA()
 			if a != 0 {
 				break BottomLoop
 			}
@@ -90,7 +90,7 @@ RightLoop:
 	for x := 0; x < img.Bounds().Dx(); x++ {
 		insets.Right = x
 		for y := 0; y < img.Bounds().Dy(); y++ {
-			_, _, _, a := img.At((img.Bounds().Dx() - 1) - x, y).RGBA()
+			_, _, _, a := img.At((img.Bounds().Dx()-1)-x, y).RGBA()
 			if a != 0 {
 				break RightLoop
 			}
