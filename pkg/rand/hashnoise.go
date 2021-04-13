@@ -12,7 +12,7 @@ func HashNoise(position, seed uint32) (value uint32) {
 	value ^= value >> 8
 	value += bitNoise2
 	value ^= value << 8
-	value = bitNoise3
+	value *= bitNoise3
 	value ^= value >> 8
 	return
 }
