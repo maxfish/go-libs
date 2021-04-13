@@ -13,11 +13,22 @@ func NewRandomGenerator(seed int64) *RandomGenerator {
 	return r
 }
 
-func (g *RandomGenerator) NextInt() int {
-	return g.generator.Int()
+func (g *RandomGenerator) NextUint32() uint32 {
+	return g.generator.Uint32()
 }
 
-func (g *RandomGenerator) NextFloat() float32 {
+func (g *RandomGenerator) NextUint32LessThan(n int) (result uint32) {
+	result = g.NextUint32() % uint32(n)
+	return
+}
+
+func (g *RandomGenerator) NextUint32InRange(min, max int) (result uint32) {
+	result = g.NextUint32LessThan((max - min) + 1) // +1 to include max
+	result += uint32(min)
+	return
+}
+
+func (g *RandomGenerator) NextFloat32() float32 {
 	return g.generator.Float32()
 }
 
