@@ -28,7 +28,29 @@ func (hr *HashRng) NextUint32() (result uint32) {
 	return
 }
 
+func (hr *HashRng) NextUint32LessThan(n int) (result uint32) {
+	result = HashNoise(hr.position, hr.seed) % uint32(n)
+	hr.position++
+	return
+}
+
+func (hr *HashRng) NextUint32InRange(min, max int) (result uint32) {
+	result = hr.NextUint32LessThan((max - min) + 1) // +1 to include max
+	result += uint32(min)
+	hr.position++
+	return
+}
+
 func (hr *HashRng) NextFloat32() (result float32) {
-	u32 :=  HashNoise(hr.position, hr.seed)
-	return float32(u32) / math.MaxUint32
+	result = float32(HashNoise(hr.position, hr.seed)) / math.MaxUint32
+	hr.position++
+	return
+}
+
+func (hr *HashRng) Event(chance int) bool {
+	return hr.NextUint32()%100 < uint32(chance)
+}
+
+func (hr *HashRng) Maybe() bool {
+	return hr.NextUint32() < math.MaxUint32/2
 }
