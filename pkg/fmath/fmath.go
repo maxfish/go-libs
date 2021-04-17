@@ -47,6 +47,17 @@ func Max(x, y float32) float32 {
 	return y
 }
 
+
+func Floor(value float32) int {
+	var vI = int(value)
+	var vF = float32(vI)
+	if value < vF {
+		return vI - 1
+	} else {
+		return vI
+	}
+}
+
 func Clamp(value, a, b float32) float32 {
 	if value < a {
 		return a
