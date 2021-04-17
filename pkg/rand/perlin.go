@@ -1,50 +1,23 @@
 package rand
 
-/**
- * Code ported to Go from: https://github.com/SRombauts/SimplexNoise
- * Copyright (c) 2014-2018 Sebastien Rombauts (sebastien.rombauts@gmail.com)
- * Distributed under the MIT License (MIT) (See accompanying file licenses/SimplexNoise.txt)
- */
+// Code ported to Go from: https://github.com/SRombauts/SimplexNoise
+// Copyright (c) 2014-2018 Sebastien Rombauts (sebastien.rombauts@gmail.com)
+// Distributed under the MIT License (MIT) (See accompanying file licenses/SimplexNoise.txt)
 
-type PerlinNoise struct {
-	// Parameters of Fractional Brownian Motion (fBm) : sum of N "octaves" of noise
-	frequency   float32 //< Frequency ("width") of the first octave of noise (default to 1.0)
-	amplitude   float32 //< Amplitude ("height") of the first octave of noise (default to 1.0)
-	lacunarity  float32 //< Lacunarity specifies the frequency multiplier between successive octaves (default to 2.0).
-	persistence float32 //< Persistence is the loss of amplitude between successive octaves (usually 1/lacunarity)
-}
-
-/**
- * Constructor of to initialize a fractal noise summation
- *
- * @param[in] frequency    Frequency ("width") of the first octave of noise (default to 1.0)
- * @param[in] amplitude    Amplitude ("height") of the first octave of noise (default to 1.0)
- * @param[in] lacunarity   Lacunarity specifies the frequency multiplier between successive octaves (default to 2.0).
- * @param[in] persistence  Persistence is the loss of amplitude between successive octaves (usually 1/lacunarity)
- */
-func NewPerlinNoiseWithParameters(frequency, amplitude, lacunarity, persistence float32) *PerlinNoise {
-	return &PerlinNoise{
-		frequency:   frequency,
-		amplitude:   amplitude,
-		lacunarity:  lacunarity,
-		persistence: persistence,
-	}
-}
-
-func NewPerlinNoise() *PerlinNoise {
-	return NewPerlinNoiseWithParameters(1, 1, 2, 0.5)
-}
+import (
+	"github.com/maxfish/go-libs/pkg/fmath"
+)
 
 /**
  * 1D Perlin simplex noise
  * @param[in] x float coordinate
  * @return Noise value in the range[-1; 1], value of 0 on all integer coordinates.
  */
-func (n *PerlinNoise) Noise1D(x float32, seed int32) float32 {
+func PerlinNoise1D(x float32, seed int32) float32 {
 	var n0, n1 float32 // Noise contributions from the two "corners"
 
 	// Corners coordinates (nearest integer values):
-	var i0 = fastfloor(x)
+	var i0 = int32(fmath.Floor(x))
 	var i1 = i0 + 1
 	// Distances to corners (between 0 and 1):
 	var x0 = x - float32(i0)
@@ -63,17 +36,6 @@ func (n *PerlinNoise) Noise1D(x float32, seed int32) float32 {
 	// The maximum value of this noise is 8*(3/4)^4 = 2.53125
 	// A factor of 0.395 scales to fit exactly within [-1,1]
 	return 0.395 * (n0 + n1)
-}
-
-// TODO test if this is faster than the standard function
-// Computes the largest integer value not greater than the float one
-func fastfloor(fp float32) int32 {
-	var i = int32(fp)
-	if fp < float32(i) {
-		return i - 1
-	} else {
-		return i
-	}
 }
 
 /**
