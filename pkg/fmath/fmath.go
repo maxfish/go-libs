@@ -6,6 +6,9 @@ import (
 
 const (
 	Float32Size      = 4 // bytes
+	Float32MaxValue  = math.MaxFloat32
+	Float32MinNormal = float32(1.1754943508222875e-38)
+	Float32Epsilon   = float32(1e-7)
 	RadiansToDegrees = float32(180.0 / math.Pi)
 	DegreesToRadians = float32(math.Pi / 180.0)
 )
@@ -67,4 +70,21 @@ func Lerp(a, b, factor float32) float32 {
 
 func Round(value float32) float32 {
 	return float32(math.Round(float64(value)))
+}
+
+// From https://floating-point-gui.de/errors/comparison/
+func NearlyEqual(a, b, epsilon float32) bool {
+	absA := Abs(a)
+	absB := Abs(b)
+	diff := Abs(a - b)
+
+	if a == b { // shortcut, handles infinities
+		return true
+	} else if a == 0 || b == 0 || (absA+absB < Float32MinNormal) {
+		// a or b is zero or both are extremely close to it
+		// relative error is less meaningful here
+		return diff < (epsilon * Float32MinNormal)
+	} else { // use relative error
+		return diff/Min(absA+absB, Float32MaxValue) < epsilon
+	}
 }
