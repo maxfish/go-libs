@@ -35,3 +35,13 @@ func Clamp(value, a, b int) int {
 
 	return value
 }
+
+func Sign(value int) int {
+	if value == 0 {
+		return 0
+	}
+	if value < 0 {
+		return -1
+	}
+	return 1
+}
