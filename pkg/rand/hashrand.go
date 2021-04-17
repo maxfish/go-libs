@@ -6,6 +6,7 @@ import (
 )
 
 type HashRng struct {
+	RandomNumberGenerator
 	position uint32
 	seed     uint32
 }

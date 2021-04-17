@@ -1,6 +1,6 @@
 package rand
 
-type RndGenerator interface {
+type RandomNumberGenerator interface {
 	NextUint32() (result uint32)
 	NextUint32LessThan(n int) (result uint32)
 	NextUint32InRange(min, max int) (result uint32)
