@@ -75,6 +75,8 @@ func NewMaxRectsBinPacker(width, height int, paddingX, paddingY int, allowRotati
 	return mr
 }
 
+// Packs the passed rects with the chosen heuristic.
+// The dimensions of the returned rects will include the padding.
 func (mr *MaxRectsBinPacker) Pack(inputRects []RectNode, method FreeRectChoiceHeuristic) *MaxRectsBinResult {
 	rects := inputRects
 	for len(rects) > 0 {
@@ -121,7 +123,7 @@ func (mr *MaxRectsBinPacker) placeRect(node RectNode) {
 	numRectanglesToProcess := len(mr.freeRectangles)
 	for i := 0; i < numRectanglesToProcess; i++ {
 		if mr.splitFreeNode(mr.freeRectangles[i], node) {
-			mr.freeRectangles = append(mr.freeRectangles[:i], mr.freeRectangles[i+1:]...) // remove index 'i'
+			mr.freeRectangles = append(mr.freeRectangles[:i], mr.freeRectangles[i+1:]...)
 			i--
 			numRectanglesToProcess--
 		}
