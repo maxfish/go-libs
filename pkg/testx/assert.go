@@ -1,4 +1,4 @@
-package test
+package testx
 
 import (
 	"github.com/go-gl/mathgl/mgl32"
@@ -10,7 +10,7 @@ const floatThreshold = 1e-6
 
 func AssertEqual(t *testing.T, text string, expected interface{}, received interface{}) {
 	if !reflect.DeepEqual(received, expected) {
-		t.Errorf("%s failed\nexpected:\n%vreceived:\n%v", text, expected, received)
+		t.Errorf("%s failed\nexpected:\n%v\nreceived:\n%v", text, expected, received)
 	}
 }
 
