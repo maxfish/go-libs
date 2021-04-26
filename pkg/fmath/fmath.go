@@ -47,7 +47,6 @@ func Max(x, y float32) float32 {
 	return y
 }
 
-
 func Floor(value float32) int {
 	var vI = int(value)
 	var vF = float32(vI)
