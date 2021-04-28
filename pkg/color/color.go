@@ -1,17 +1,25 @@
 package color
 
+import (
+	"github.com/go-gl/mathgl/mgl32"
+	"image/color"
+)
+
 // Components are normalized floats ranging from 0 to 1
-type Color [4]float32
+type Color = mgl32.Vec4
 
-var TransparentColor = Color{0,0,0,0}
+// NewColorFromImageRGBA creates a new color from color.RGBA
+func NewColorFromImageRGBA(rgba color.RGBA) Color {
+	return NewColorFromBytes(rgba.R, rgba.G, rgba.B, rgba.A)
+}
 
-// NewColor creates a new color from float components (0->1)
-func NewColor(r, g, b, a float32) Color {
+// NewColorFromFloats creates a new color from float components (0->1)
+func NewColorFromFloats(r, g, b, a float32) Color {
 	return Color{r, g, b, a}
 }
 
-// NewColorInt creates a new color from 8bit components (0->255)
-func NewColorInt(r, g, b, a uint8) Color {
+// NewColorFromBytes creates a new color from 8bit components (0->255)
+func NewColorFromBytes(r, g, b, a uint8) Color {
 	return Color{
 		float32(r) / 255.0,
 		float32(g) / 255.0,
@@ -20,8 +28,8 @@ func NewColorInt(r, g, b, a uint8) Color {
 	}
 }
 
-// NewColorHex creates a new color from an hex number
-func NewColorHex(hex uint32) Color {
+// NewColorFromHex creates a new color from an hex number
+func NewColorFromHex(hex uint32) Color {
 	c := Color{}
 	c[3] = float32(hex&0xFF) / 255
 	hex >>= 8
@@ -33,8 +41,8 @@ func NewColorHex(hex uint32) Color {
 	return c
 }
 
-// NewColorGrayInt creates a gray shade from float components (0->1)
-func NewColorGrayInt(g, a uint8) Color {
+// NewColorFromGrayInt creates a gray shade from float components (0->1)
+func NewColorFromGrayInt(g, a uint8) Color {
 	return Color{
 		float32(g) / 255.0,
 		float32(g) / 255.0,
@@ -43,16 +51,6 @@ func NewColorGrayInt(g, a uint8) Color {
 	}
 }
 
-func (c Color) Scaled(scale float32) Color {
-	return Color{
-		c[0] * scale,
-		c[1] * scale,
-		c[2] * scale,
-		c[3] * scale,
-	}
-}
-
-func (c Color) WithAlpha(alpha float32) Color {
-	c[3] = alpha
-	return c
+func ColorScaled(color Color, scale float32) Color {
+	return color.Mul(scale)
 }
