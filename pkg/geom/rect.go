@@ -11,8 +11,6 @@ type Rect struct {
 	X, Y, W, H int
 }
 
-var EmptyRect = Rect{X: 0, Y: 0, W: 0, H: 0}
-
 func RectFromArray(values [4]int) Rect {
 	return Rect{X: values[0], Y: values[1], W: values[2], H: values[3]}
 }
