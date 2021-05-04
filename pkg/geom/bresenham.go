@@ -34,7 +34,9 @@ func IterateLine(x0, y0, x1, y1 int, callBack BresenhamCallBack) {
 
 	if swapCoords {
 		for x := x0; x <= x1; x++ {
-			callBack(y, x)
+			if callBack(y, x) {
+				return
+			}
 			err -= deltaY
 			if err < 0 {
 				y += yStep
@@ -43,7 +45,9 @@ func IterateLine(x0, y0, x1, y1 int, callBack BresenhamCallBack) {
 		}
 	} else {
 		for x := x0; x <= x1; x++ {
-			callBack(x, y)
+			if callBack(x, y) {
+				return
+			}
 			err -= deltaY
 			if err < 0 {
 				y += yStep
