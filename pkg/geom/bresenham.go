@@ -4,13 +4,13 @@ import (
 	"github.com/maxfish/go-libs/pkg/imath"
 )
 
+// The BresenhamCallBack function should return true if the iteration needs to stop.
 // x,y are the current iteration coordinates.
-// Should return true if the iteration needs to stop.
 type BresenhamCallBack func(x int, y int) bool
 
-// Iterate a line from x0,y0 to x1,y1.
+// IterateLine from x0,y0 to x1,y1.
 // For each point on the line it calls the callBack function.
-// Note: The order of the points is not preserved, and it's faster than IterateLineOrdered.
+// Note: The order of the points is not preserved.
 func IterateLine(x0, y0, x1, y1 int, callBack BresenhamCallBack) {
 	var swapCoords = imath.Abs(y1-y0) > imath.Abs(x1-x0)
 	if swapCoords {
@@ -57,6 +57,9 @@ func IterateLine(x0, y0, x1, y1 int, callBack BresenhamCallBack) {
 	}
 }
 
+// IterateLineOrdered from x0,y0 to x1,y1.
+// For each point on the line it calls the callBack function.
+// Note: The order of the points is preserved, use IterateLineOrdered if speed is more important.
 func IterateLineOrdered(x0, y0, x1, y1 int, callBack BresenhamCallBack) {
 	deltaX := imath.Abs(x1 - x0)
 	xStep := -1
