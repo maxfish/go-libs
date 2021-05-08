@@ -81,3 +81,7 @@ func Lerp(a, b, factor float32) float32 {
 func Round(value float32) float32 {
 	return float32(math.Round(float64(value)))
 }
+
+func Sqrt(value float32) float32 {
+	return float32(math.Sqrt(float64(value)))
+}
