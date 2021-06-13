@@ -41,6 +41,6 @@ func (s Size) Scale(factor float32) Size {
 	}
 }
 
-func (s Size) ToString() string {
+func (s Size) String() string {
 	return fmt.Sprintf("{w:%d,h:%d}", s.W, s.H)
 }

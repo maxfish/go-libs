@@ -15,7 +15,7 @@ func RectFromArray(values [4]int) Rect {
 	return Rect{X: values[0], Y: values[1], W: values[2], H: values[3]}
 }
 
-func RectFromFloats(x, y, w, h float32) Rect {
+func RectFromFloat(x, y, w, h float32) Rect {
 	return Rect{X: int(x), Y: int(y), W: int(w), H: int(h)}
 }
 
@@ -234,6 +234,6 @@ func (r Rect) EqualsTo(other Rect) bool {
 	return r.X == other.X && r.Y == other.Y && r.W == other.W && r.H == other.H
 }
 
-func (r Rect) ToString() string {
+func (r Rect) String() string {
 	return fmt.Sprintf("{x:%d,y:%d,w:%d,h:%d}", r.X, r.Y, r.W, r.H)
 }

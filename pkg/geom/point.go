@@ -27,6 +27,6 @@ func (p Point) EqualsTo(other Point) bool {
 	return p.X == other.X && p.Y == other.Y
 }
 
-func (p Point) ToString() string {
+func (p Point) String() string {
 	return fmt.Sprintf("{x:%d,y:%d}", p.X, p.Y)
 }
